@@ -1,0 +1,4 @@
+/target
+
+inputs/*.txt
+!inputs/*_sample.txt
