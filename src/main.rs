@@ -1,5 +1,7 @@
 use clap::Parser;
+
 use aoc25::y2025;
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -14,13 +16,15 @@ struct Args {
 }
 
 macro_rules! aoc_dispatch {
-    ($year_mod:ident, $args:expr, $( $day:literal => $module:ident ),+ $(,)?) => {
-        match ($args.day, $args.part) {
-            $(
-                ($day, 1) => $year_mod::$module::part1(),
-                ($day, 2) => $year_mod::$module::part2(),
-            )+
-            _ => panic!("invalid (day, part)"),
+    ($year:tt, $day:expr, $part:expr, max_day = $max:tt) => {
+        paste::paste! {
+            seq_macro::seq!(D in 01..=$max {
+                match ($day, $part) {
+                    #((D, 1) => [<y $year>]::day~D::part1(),)*
+                    #((D, 2) => [<y $year>]::day~D::part2(),)*
+                    _ => panic!("Day {} part {} not implemented", $day, $part),
+                }
+            })
         }
     };
 }
@@ -29,23 +33,8 @@ fn main() {
     let args = Args::parse();
 
     let res = match args.year {
-        2025 => aoc_dispatch!(
-            y2025,
-            args,
-            1 => day01,
-            2 => day02,
-            3 => day03,
-            4 => day04,
-            5 => day05,
-            6 => day06,
-            7 => day07,
-            8 => day08,
-            9 => day09,
-            10 => day10,
-            11 => day11,
-            12 => day12,
-        ),
-        _ => panic!("invalid year"),
+        2025 => aoc_dispatch!(2025, args.day, args.part, max_day = 12),
+        _ => panic!("Year {} not implemented", args.year),
     };
 
     println!("{}", res);
