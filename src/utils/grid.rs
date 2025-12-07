@@ -1,5 +1,5 @@
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub struct Pos(i64, i64);
+pub struct Pos(pub i64, pub i64);
 
 const DIRS8: &[Pos; 8] = &[
     Pos(-1, -1), Pos(-1, 0), Pos(-1, 1),
